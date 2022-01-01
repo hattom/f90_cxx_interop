@@ -12,6 +12,20 @@ CXXFLAGS = -O2 -Wall
 LDFLAGS = -lgfortran -lstdc++ # allows linking to be done with either CC, FC, or CXX
 LD = $(CC)
 
+FFTW ?= TRUE
+ifeq ($(FFTW), TRUE)
+	FFTW_INC = -I/usr/include
+	FFLAGS += $(FFTW_INC) -DFFTW
+	FFTW_LIB = -L/usr/lib -lfftw3f
+	LDFLAGS += $(FFTW_LIB)
+endif
+
+# Set reprod to true to fix the seed for testing
+REPROD ?= FALSE
+ifeq ($(REPROD), TRUE)
+  FFLAGS += -DREPROD
+endif
+
 EXEC = bin/main
 .DEFAULT_GOAL = all
 .PHONY: all clean
