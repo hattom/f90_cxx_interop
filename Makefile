@@ -4,21 +4,23 @@ SRCDIR = src
 BINDIR = bin
 OBJSUBDIR = obj
 
+CC = gcc
 FC = gfortran
 CXX = g++
 FFLAGS = -O2 -Wall -fbounds-check -J$(OBJSUBDIR)
 CXXFLAGS = -O2 -Wall
-LDFLAGS = -lgfortran -lstdc++
-LD = $(FC)
+LDFLAGS = -lgfortran -lstdc++ # allows linking to be done with either CC, FC, or CXX
+LD = $(CC)
 
-.DEFAULT_GOAL = all # necessary if include files.inc is NOT done after "all:"
+EXEC = bin/main
+.DEFAULT_GOAL = all
 .PHONY: all clean
 
-all: bin/main
+all: $(EXEC)
 ## File lists and dependencies
 include files.mk
 
-bin/main: $(OBJLIST)
+$(EXEC): $(OBJLIST)
 	@test -d $(@D) || mkdir -p $(@D)
 	$(LD) -o $@ $^ $(LDFLAGS)
 
