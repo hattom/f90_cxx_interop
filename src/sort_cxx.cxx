@@ -14,4 +14,9 @@ extern "C" {
         printf("C++ fai %4d %E", nelems, array[50]);
         std::cout << std::endl;
     }
+
+    void std_sort_wrapper_fai_2(float* &array, int nelems) {
+        printf("C++ fai 2 %4d %E", nelems, array[50]);
+        std::cout << std::endl;
+    }
 }
