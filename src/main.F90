@@ -1,6 +1,6 @@
 program main
-  use sorting, only: sorting_init, sorting_sort
+  use sorting, only: sorting_init, run_tests
   implicit none
   call sorting_init()
-  call sorting_sort()
+  call run_tests()
 end program main

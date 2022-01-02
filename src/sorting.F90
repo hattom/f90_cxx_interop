@@ -4,37 +4,8 @@
 
 module sorting
   use iso_c_binding, only: C_INT, C_PTR, C_FLOAT, C_LOC, C_SIZE_T
+  use sort_cxx_interface
   implicit none
-
-  interface
-    subroutine std_sort_wrapper(array, n) bind(C)
-      ! pass fortran array c_ptr to c "float* &array"
-      import :: C_INT, C_PTR
-      type(C_PTR), intent(inout) ::  array
-      integer(kind=C_INT), intent(in), value ::  n
-    end subroutine std_sort_wrapper
-
-    subroutine std_sort_wrapper_ri(real1, int1) bind(C)
-      ! pass single fortran c_float to c "float value"
-      import :: C_INT, C_FLOAT
-      real(kind=C_FLOAT), intent(in), value ::  real1
-      integer(kind=C_INT), intent(in), value ::  int1
-    end subroutine std_sort_wrapper_ri
-
-    subroutine std_sort_wrapper_fai(realarr1, int1) bind(C)
-      ! pass fortran array c_ptr+value to c "float* array"
-      import :: C_INT, C_PTR
-      type(C_PTR), intent(in), value ::  realarr1
-      integer(kind=C_INT), intent(in), value ::  int1
-    end subroutine std_sort_wrapper_fai
-
-    subroutine std_sort_wrapper_fai_2(realarr1, int1) bind(C)
-      ! pass fortran array "real dimension(:)" to c "float* &array"
-      import :: C_INT, C_FLOAT
-      real(kind=C_FLOAT), dimension(:), intent(in) ::  realarr1
-      integer(kind=C_INT), intent(in), value ::  int1
-    end subroutine std_sort_wrapper_fai_2
-  end interface
 
   real, allocatable, target, dimension(:) :: f_data
   type(C_PTR) :: c_data
@@ -82,18 +53,18 @@ module sorting
 #endif
     end subroutine sorting_init
 
-    subroutine sorting_sort
-      call sort_check()
-      call std_sort_wrapper_ri(f_data(51), nelems)
-      call std_sort_wrapper(c_data, nelems)
+    subroutine run_tests
+      call f90_test_check()
+      call std_test_wrapper_ri(f_data(51), nelems)
+      call std_test_wrapper(c_data, nelems)
 #ifdef FFTW
-      call std_sort_wrapper_fai(c_fftw, nelems)
+      call std_test_wrapper_fai(c_fftw, nelems)
 #endif
-      call std_sort_wrapper_fai_2(f_fftw_data, nelems)
-    end subroutine sorting_sort
+      call std_test_wrapper_fai_2(f_fftw_data, nelems)
+    end subroutine run_tests
 
-    subroutine sort_check()
+    subroutine f90_test_check()
       print *, 'F90 3', nelems, f_data(51)
-    end subroutine sort_check
+    end subroutine f90_test_check
 
 end module sorting

@@ -1,5 +1,6 @@
 F90SRC = main.F90 \
-   sorting.F90
+   sorting.F90 \
+   sort_cxx_interface.F90
 CXXSRC = sort_cxx.cxx
 CSRC =
 
@@ -9,6 +10,8 @@ COBJ    = $(addprefix $(OBJSUBDIR)/,$(CSRC:.c=.o))
 OBJLIST = $(F90OBJ) $(COBJ) $(CXXOBJ)
 export OBJLIST
 
+$(OBJSUBDIR)/sorting.o: $(addprefix $(OBJSUBDIR)/, \
+   sort_cxx_interface.o )
+
 $(OBJSUBDIR)/main.o: $(addprefix $(OBJSUBDIR)/, \
-   sorting.o \
-   sort_cxx.o )
+   sorting.o )
