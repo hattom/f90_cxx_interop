@@ -10,7 +10,8 @@ module sorting
   implicit none
 
   real, allocatable, target, dimension(:) :: f_data
-  type(C_PTR) :: c_data
+  real, pointer, dimension(:) :: f_data_2, f_data_ptr
+  type(C_PTR) :: c_data, c_data_2, c_data_ptr
 #ifdef FFTW
   type(C_PTR) :: c_fftw
   real(kind=C_FLOAT), dimension(:), pointer :: f_fftw_data
@@ -35,7 +36,11 @@ module sorting
         nelems = 1000
       endif
       allocate(f_data(nelems))
+      allocate(f_data_2(nelems))
+      f_data_ptr => f_data
       c_data = c_loc(f_data)
+      c_data_2 = c_loc(f_data_2)
+      c_data_ptr = c_loc(f_data_ptr)
 
 #ifdef FFTW
       call fftw_alloc()
@@ -69,28 +74,50 @@ module sorting
 #ifdef FFTW
       f_fftw_data(:) = f_data(:)
 #endif
+      f_data_2(:) = f_data(:)
     end subroutine sorting_reset
 
-    subroutine run_tests
-      call f90_test_check()
+    subroutine test_test
       call std_test_wrapper_ri(f_data(PRINT_ID+1), nelems)
       call std_test_wrapper(c_data, nelems)
       print *, 'min', minval(f_data)
 #ifdef FFTW
       print *, 'min', minval(f_fftw_data)
       call std_test_wrapper_fai(c_fftw, nelems)
-      call std_test_wrapper_fai_2(f_fftw_data, nelems)
+    call std_test_wrapper_fai_2(f_fftw_data, nelems)
+#endif
+    end subroutine test_test
+
+    subroutine test_sort
+#ifdef FFTW
       call sorting_reset
       call std_sort_wrapper_fai(c_fftw, nelems)
       print *, 'a', f_fftw_data(PRINT_ID+1)
       call sorting_reset
       call std_sort_wrapper_fai_simple(c_fftw, nelems)
       print *, 'b', f_fftw_data(PRINT_ID+1)
+      call sorting_reset
+      call std_sort_wrapper(c_fftw, nelems)
+      print *, 'c(fftw)', f_fftw_data(PRINT_ID+1)
 #endif
+      call sorting_reset
       call std_sort_wrapper(c_data, nelems)
       print *, 'c', f_data(PRINT_ID+1)
+      call sorting_reset
+      call std_sort_wrapper(c_data_2, nelems)
+      print *, 'c2', f_data_2(PRINT_ID+1)
+      call sorting_reset
+      call std_sort_wrapper(c_data_ptr, nelems)
+      print *, 'c(ptr)', f_data(PRINT_ID+1)
+      call sorting_reset
       call std_sort_wrapper_fai_2(f_data, nelems)
       print *, 'd', f_data(PRINT_ID+1)
+    end subroutine test_sort
+
+    subroutine run_tests
+      call f90_test_check()
+      call test_test()
+      call test_sort()
     end subroutine run_tests
 
     subroutine f90_test_check()
