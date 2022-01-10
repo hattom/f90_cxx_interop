@@ -54,7 +54,7 @@ $(OBJSUBDIR)/%.o: $(SRCDIR)/%.c
 	@test -d $(@D) || mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJSUBDIR)/%.o: $(SRCDIR)/%.cxx
+$(OBJSUBDIR)/%.o: $(SRCDIR)/%.cxx $(SRCDIR)/%.hxx
 	@test -d $(@D) || mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
