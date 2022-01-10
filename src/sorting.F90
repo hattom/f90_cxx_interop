@@ -112,6 +112,9 @@ module sorting
       call sorting_reset
       call std_sort_wrapper_fai_2(f_data, nelems)
       print *, 'd', f_data(PRINT_ID+1)
+      call sorting_reset
+      call std_sort_wrapper_fai(c_data_2, nelems)
+      print *, 'e', f_data_2(PRINT_ID+1)
     end subroutine test_sort
 
     subroutine run_tests
