@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <vector>
 #include <algorithm>
+#include "sort_cxx.hxx"
 
 #define PRINT_ID 0
 extern "C" {
