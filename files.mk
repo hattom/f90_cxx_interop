@@ -5,7 +5,7 @@ CXXSRC = sort_cxx.cxx
 CSRC =
 
 F90OBJ  = $(addprefix $(OBJSUBDIR)/,$(F90SRC:.F90=.o))
-CXXOBJ    = $(addprefix $(OBJSUBDIR)/,$(CXXSRC:.cxx=.o))
+CXXOBJ  = $(addprefix $(OBJSUBDIR)/,$(CXXSRC:.cxx=.o))
 COBJ    = $(addprefix $(OBJSUBDIR)/,$(CSRC:.c=.o))
 OBJLIST = $(F90OBJ) $(COBJ) $(CXXOBJ)
 export OBJLIST
